@@ -161,5 +161,20 @@ public class BillingAppTest {
 		bApp.purchaseItem("Cheese Sandwich");
 		assertEquals(bApp.getTotalCharge(), 3.50, DELTA);
 	}
+	
+	@Test
+	public void calculateServiceChargeOfZeroItems() {
+		BillingApp bApp = new BillingApp();
+		assertEquals(bApp.calculateServiceCharge(), 0.00, DELTA);
+	}
+	
+	@Test
+	public void calculateServiceChargeOfThreeItems() {
+		BillingApp bApp = new BillingApp();
+		bApp.purchaseItem("Cola");
+		bApp.purchaseItem("Coffee");
+		bApp.purchaseItem("Cheese Sandwich");
+		assertEquals(bApp.calculateServiceCharge(), 0.35, DELTA);
+	}
 		
 }

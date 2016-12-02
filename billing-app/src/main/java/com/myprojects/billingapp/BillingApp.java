@@ -40,7 +40,13 @@ public class BillingApp {
 				System.out.printf("%2d. %-20s £%.2f\n", idx+1, bApp.itemsPurchased.get(idx), bApp.getPrice(bApp.itemsPurchased.get(idx)) );
 			}
 			System.out.println("--------------------");
-			System.out.printf("%5s %-12s £%.2f\n", "Total Charge", "", bApp.totalCharge);
+			System.out.printf("%5s %-13s £%.2f\n", "Sub Total ", "", bApp.totalCharge);
+			
+			System.out.println("--------------------");
+			System.out.printf("%5s %-10s £%.2f\n", "Service Charge", "", bApp.calculateServiceCharge());
+			
+			System.out.println("--------------------");
+			System.out.printf("%5s %-12s £%.2f\n", "Total Charge", "", bApp.totalCharge + bApp.calculateServiceCharge());
 			System.out.println("--------------------");
 		}catch (RuntimeException e) {
 			System.out.println(e.getMessage());
@@ -84,5 +90,9 @@ public class BillingApp {
 	
 	public double getTotalCharge() {
 		return totalCharge;
+	}
+
+	public double calculateServiceCharge() {
+		return totalCharge * 10.0 / 100.0;
 	}
 }
