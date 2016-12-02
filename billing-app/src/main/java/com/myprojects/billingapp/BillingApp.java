@@ -99,7 +99,7 @@ public class BillingApp {
 				foodItem = true;
 			}
 			if (item.equalsIgnoreCase("Steak Sandwich")) {
-				return totalCharge * 20.00 / 100.0;
+				return (totalCharge * 20.00 / 100.0 > 20.00) ? 20.00 : totalCharge * 20.00 / 100.0;
 			}
 		}
 		if(foodItem)

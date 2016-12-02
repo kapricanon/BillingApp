@@ -207,5 +207,23 @@ public class BillingAppTest {
 		bApp.purchaseItem("Coffee");
 		assertEquals(bApp.calculateServiceCharge(), 1.50, DELTA);
 	}
-		
+	
+	@Test
+	public void whenCalculateServiceChargeOfHotFoodLimitTheChargeTo20Pounds() {
+		BillingApp bApp = new BillingApp();
+		for(int idx = 0; idx < 32; idx++) {
+			bApp.purchaseItem("Steak Sandwich");
+		}
+		assertEquals(bApp.calculateServiceCharge(), 20.00, DELTA);
+	}
+	
+	@Test
+	public void whenCalculateServiceChargeOfColdFoodDoNotLimitTheChargeTo20Pounds() {
+		BillingApp bApp = new BillingApp();
+		for(int idx = 0; idx < 200; idx++) {
+			bApp.purchaseItem("Cheese Sandwich");
+		}
+		assertEquals(bApp.calculateServiceCharge(), 40.00, DELTA);
+	}
+	
 }
