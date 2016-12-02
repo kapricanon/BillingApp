@@ -93,6 +93,15 @@ public class BillingApp {
 	}
 
 	public double calculateServiceCharge() {
-		return totalCharge * 10.0 / 100.0;
+		boolean foodItem = false;
+		for(String item : itemsPurchased) {
+			if(item.equalsIgnoreCase("Cheese Sandwich") || item.equalsIgnoreCase("Steak Sandwich")) {
+				foodItem = true;
+			}
+		}
+		if(foodItem)
+			return totalCharge * 10.0 / 100.0;
+		else
+			return 0.00;
 	}
 }
