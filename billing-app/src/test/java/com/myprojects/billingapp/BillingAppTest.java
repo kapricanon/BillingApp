@@ -20,6 +20,9 @@ public class BillingAppTest {
 	/**
 	 * @throws java.lang.Exception
 	 */
+	private static final double DELTA = 1e-15;
+
+	
 	@Before
 	public void setUp() throws Exception {
 	}
@@ -94,12 +97,69 @@ public class BillingAppTest {
 		RuntimeException exception = null;
 		BillingApp bApp = new BillingApp();
 		try {
-			bApp.purchaseItem("Tomato and Cheese Sandwich");
+			bApp.purchaseItem("Item wont exist ever");
 		} catch (RuntimeException e) {
 			exception = e;
 		}
 		Assert.assertNotEquals(exception, null);
 	}
 	
-
+	@Test
+	public void findPriceForCola() {
+		BillingApp bApp = new BillingApp();
+		double price = bApp.getPrice("Cola");
+		assertEquals(price, 0.50, DELTA);
+	}
+	
+	@Test
+	public void findPriceForCoffee() {
+		BillingApp bApp = new BillingApp();
+		double price = bApp.getPrice("Coffee");
+		assertEquals(price, 1.00, DELTA);
+	}
+	
+	@Test
+	public void findPriceForCheeseSandwich() {
+		BillingApp bApp = new BillingApp();
+		double price = bApp.getPrice("Cheese Sandwich");
+		assertEquals(price, 2.00, DELTA);
+	}
+	
+	@Test
+	public void findPriceForSteakSandwich() {
+		BillingApp bApp = new BillingApp();
+		double price = bApp.getPrice("Steak Sandwich");
+		assertEquals(price, 4.5, DELTA);
+	}
+	
+	@Test
+	public void whenAnInvalidItemNameIsUsedToFindPriceThenExpectZero() {
+		BillingApp bApp = new BillingApp();
+		double price = bApp.getPrice("Item wont exist ever");
+		assertEquals(price, 0, DELTA);
+	}
+	
+	@Test
+	public void whenEmptyStringIsUsedAsItemNameToFindPriceThenExpectZero() {
+		BillingApp bApp = new BillingApp();
+		double price = bApp.getPrice("  ");
+		assertEquals(price, 0, DELTA);
+	}
+	
+	@Test
+	public void whenNullValueIsUsedAsItemNameToFindPriceThenExpectZero() {
+		BillingApp bApp = new BillingApp();
+		double price = bApp.getPrice(null);
+		assertEquals(price, 0, DELTA);
+	}
+	
+	@Test
+	public void calculateTotalPriceOfThreeItems() {
+		BillingApp bApp = new BillingApp();
+		bApp.purchaseItem("Cola");
+		bApp.purchaseItem("Coffee");
+		bApp.purchaseItem("Cheese Sandwich");
+		assertEquals(bApp.getTotalCharge(), 3.50, DELTA);
+	}
+		
 }
