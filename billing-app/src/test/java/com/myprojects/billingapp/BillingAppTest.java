@@ -187,9 +187,25 @@ public class BillingAppTest {
 	@Test
 	public void whenCalculateServiceChargeOfFoodItemsThenServiceChargeShouldBe10Percent() {
 		BillingApp bApp = new BillingApp();
+		bApp.purchaseItem("Cheese Sandwich");
+		assertEquals(bApp.calculateServiceCharge(), 0.2, DELTA);
+	}
+	
+	@Test
+	public void whenCalculateServiceChargeOfHotFoodItemsThenServiceChargeShouldBe20Percent() {
+		BillingApp bApp = new BillingApp();
 		bApp.purchaseItem("Steak Sandwich");
 		bApp.purchaseItem("Cheese Sandwich");
-		assertEquals(bApp.calculateServiceCharge(), 0.65, DELTA);
+		assertEquals(bApp.calculateServiceCharge(), 1.30, DELTA);
+	}
+	
+	@Test
+	public void whenCalculateServiceChargeOfHotFoodItemsAndDrinksThenServiceChargeShouldBe20Percent() {
+		BillingApp bApp = new BillingApp();
+		bApp.purchaseItem("Steak Sandwich");
+		bApp.purchaseItem("Cheese Sandwich");
+		bApp.purchaseItem("Coffee");
+		assertEquals(bApp.calculateServiceCharge(), 1.50, DELTA);
 	}
 		
 }
