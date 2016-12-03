@@ -30,30 +30,30 @@ public class BillingAppTest {
 	@Test
 	public void purchaseOneValidItem() {
 		BillingApp bApp = new BillingApp();
-		List<String> purchasedItems = bApp.purchaseItem("Cola");
-		assertTrue(purchasedItems.get(0).equals("Cola"));
+		List<String> purchasedItems = bApp.purchaseItem(CodeConstants.menuItemCola);
+		assertTrue(purchasedItems.get(0).equals(CodeConstants.menuItemCola));
 	}
 	
 	@Test
 	public void purchaseTwoValidItems() {
 		BillingApp bApp = new BillingApp();
-		List<String> purchasedItems = bApp.purchaseItem("Cola");
-		bApp.purchaseItem("Coffee");
-		assertTrue(purchasedItems.get(0).equals("Cola"));
-		assertTrue(purchasedItems.get(1).equals("Coffee"));
+		List<String> purchasedItems = bApp.purchaseItem(CodeConstants.menuItemCola);
+		bApp.purchaseItem(CodeConstants.menuItemCoffee);
+		assertTrue(purchasedItems.get(0).equals(CodeConstants.menuItemCola));
+		assertTrue(purchasedItems.get(1).equals(CodeConstants.menuItemCoffee));
 	}
 	
 	@Test
 	public void purchaseMultipleValidItems() {
 		BillingApp bApp = new BillingApp();
-		List<String> purchasedItems = bApp.purchaseItem("Cola");
-		bApp.purchaseItem("Coffee");
-		bApp.purchaseItem("Cheese Sandwich");
-		bApp.purchaseItem("Steak Sandwich");
-		assertTrue(purchasedItems.get(0).equals("Cola"));
-		assertTrue(purchasedItems.get(1).equals("Coffee"));
-		assertTrue(purchasedItems.get(2).equals("Cheese Sandwich"));
-		assertTrue(purchasedItems.get(3).equals("Steak Sandwich"));
+		List<String> purchasedItems = bApp.purchaseItem(CodeConstants.menuItemCola);
+		bApp.purchaseItem(CodeConstants.menuItemCoffee);
+		bApp.purchaseItem(CodeConstants.menuItemCheeseSandwich);
+		bApp.purchaseItem(CodeConstants.menuItemSteakSandwich);
+		assertTrue(purchasedItems.get(0).equals(CodeConstants.menuItemCola));
+		assertTrue(purchasedItems.get(1).equals(CodeConstants.menuItemCoffee));
+		assertTrue(purchasedItems.get(2).equals(CodeConstants.menuItemCheeseSandwich));
+		assertTrue(purchasedItems.get(3).equals(CodeConstants.menuItemSteakSandwich));
 	}
 	
 	@Test
@@ -107,28 +107,28 @@ public class BillingAppTest {
 	@Test
 	public void findPriceForCola() {
 		BillingApp bApp = new BillingApp();
-		double price = bApp.getPrice("Cola");
+		double price = bApp.getPrice(CodeConstants.menuItemCola);
 		assertEquals(price, 0.50, DELTA);
 	}
 	
 	@Test
 	public void findPriceForCoffee() {
 		BillingApp bApp = new BillingApp();
-		double price = bApp.getPrice("Coffee");
+		double price = bApp.getPrice(CodeConstants.menuItemCoffee);
 		assertEquals(price, 1.00, DELTA);
 	}
 	
 	@Test
 	public void findPriceForCheeseSandwich() {
 		BillingApp bApp = new BillingApp();
-		double price = bApp.getPrice("Cheese Sandwich");
+		double price = bApp.getPrice(CodeConstants.menuItemCheeseSandwich);
 		assertEquals(price, 2.00, DELTA);
 	}
 	
 	@Test
 	public void findPriceForSteakSandwich() {
 		BillingApp bApp = new BillingApp();
-		double price = bApp.getPrice("Steak Sandwich");
+		double price = bApp.getPrice(CodeConstants.menuItemSteakSandwich);
 		assertEquals(price, 4.5, DELTA);
 	}
 	
@@ -156,9 +156,9 @@ public class BillingAppTest {
 	@Test
 	public void calculateTotalPriceOfThreeItems() {
 		BillingApp bApp = new BillingApp();
-		bApp.purchaseItem("Cola");
-		bApp.purchaseItem("Coffee");
-		bApp.purchaseItem("Cheese Sandwich");
+		bApp.purchaseItem(CodeConstants.menuItemCola);
+		bApp.purchaseItem(CodeConstants.menuItemCoffee);
+		bApp.purchaseItem(CodeConstants.menuItemCheeseSandwich);
 		assertEquals(bApp.getTotalCharge(), 3.50, DELTA);
 	}
 	
@@ -171,40 +171,40 @@ public class BillingAppTest {
 	@Test
 	public void whenCalculateServiceChargeForNonFoodItemsThenServiceChangeShouldBeZero() {
 		BillingApp bApp = new BillingApp();
-		bApp.purchaseItem("Cola");
-		bApp.purchaseItem("Coffee");
+		bApp.purchaseItem(CodeConstants.menuItemCola);
+		bApp.purchaseItem(CodeConstants.menuItemCoffee);
 		assertEquals(bApp.calculateServiceCharge(), 0.00, DELTA);
 	}
 	
 	@Test
 	public void whenCalculateServiceChargeOfFoodItemAndNonFoodItemThenServiceChargeShouldBe10Percent() {
 		BillingApp bApp = new BillingApp();
-		bApp.purchaseItem("Cola");
-		bApp.purchaseItem("Cheese Sandwich");
+		bApp.purchaseItem(CodeConstants.menuItemCola);
+		bApp.purchaseItem(CodeConstants.menuItemCheeseSandwich);
 		assertEquals(bApp.calculateServiceCharge(), 0.25, DELTA);
 	}
 	
 	@Test
 	public void whenCalculateServiceChargeOfFoodItemsThenServiceChargeShouldBe10Percent() {
 		BillingApp bApp = new BillingApp();
-		bApp.purchaseItem("Cheese Sandwich");
+		bApp.purchaseItem(CodeConstants.menuItemCheeseSandwich);
 		assertEquals(bApp.calculateServiceCharge(), 0.2, DELTA);
 	}
 	
 	@Test
 	public void whenCalculateServiceChargeOfHotFoodItemsThenServiceChargeShouldBe20Percent() {
 		BillingApp bApp = new BillingApp();
-		bApp.purchaseItem("Steak Sandwich");
-		bApp.purchaseItem("Cheese Sandwich");
+		bApp.purchaseItem(CodeConstants.menuItemSteakSandwich);
+		bApp.purchaseItem(CodeConstants.menuItemCheeseSandwich);
 		assertEquals(bApp.calculateServiceCharge(), 1.30, DELTA);
 	}
 	
 	@Test
 	public void whenCalculateServiceChargeOfHotFoodItemsAndDrinksThenServiceChargeShouldBe20Percent() {
 		BillingApp bApp = new BillingApp();
-		bApp.purchaseItem("Steak Sandwich");
-		bApp.purchaseItem("Cheese Sandwich");
-		bApp.purchaseItem("Coffee");
+		bApp.purchaseItem(CodeConstants.menuItemSteakSandwich);
+		bApp.purchaseItem(CodeConstants.menuItemCheeseSandwich);
+		bApp.purchaseItem(CodeConstants.menuItemCoffee);
 		assertEquals(bApp.calculateServiceCharge(), 1.50, DELTA);
 	}
 	
@@ -212,7 +212,7 @@ public class BillingAppTest {
 	public void whenCalculateServiceChargeOfHotFoodLimitTheChargeTo20Pounds() {
 		BillingApp bApp = new BillingApp();
 		for(int idx = 0; idx < 32; idx++) {
-			bApp.purchaseItem("Steak Sandwich");
+			bApp.purchaseItem(CodeConstants.menuItemSteakSandwich);
 		}
 		assertEquals(bApp.calculateServiceCharge(), 20.00, DELTA);
 	}
@@ -221,7 +221,7 @@ public class BillingAppTest {
 	public void whenCalculateServiceChargeOfColdFoodDoNotLimitTheChargeTo20Pounds() {
 		BillingApp bApp = new BillingApp();
 		for(int idx = 0; idx < 200; idx++) {
-			bApp.purchaseItem("Cheese Sandwich");
+			bApp.purchaseItem(CodeConstants.menuItemCheeseSandwich);
 		}
 		assertEquals(bApp.calculateServiceCharge(), 40.00, DELTA);
 	}

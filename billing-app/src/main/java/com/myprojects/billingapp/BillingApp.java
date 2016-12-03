@@ -3,7 +3,9 @@ package com.myprojects.billingapp;
 import java.awt.ItemSelectable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.management.RuntimeErrorException;
 
@@ -23,10 +25,20 @@ public class BillingApp {
 
 	//Holds the list of items purchased
 	private List<String> itemsPurchased = new ArrayList<String>();
+	//Holds a map of items, their price & type
+	private Map<String, Double> menuItemMap = new HashMap<String, Double>();
 	private double totalCharge = 0;
 	
+	public BillingApp() {
+		menuItemMap.put(CodeConstants.menuItemCola, 0.50);
+		menuItemMap.put(CodeConstants.menuItemCoffee, 1.00);
+		menuItemMap.put(CodeConstants.menuItemCheeseSandwich, 2.00);
+		menuItemMap.put(CodeConstants.menuItemSteakSandwich, 4.50);
+	}
+
 	public static void main(String[] args) {
 		BillingApp bApp = new BillingApp();
+		
 		try {
 			for(String item : args) {
 				bApp.purchaseItem(item);
@@ -62,10 +74,9 @@ public class BillingApp {
 	 */
 	public List<String> purchaseItem(String itemToPurchase) {
 		if(StringUtils.isBlank(itemToPurchase)) 
-			throw new RuntimeException("Please enter a valid purchase item");
-		if(!("Cola".equalsIgnoreCase(itemToPurchase) || "Coffee".equalsIgnoreCase(itemToPurchase)
-				|| "Cheese Sandwich".equalsIgnoreCase(itemToPurchase) || "Steak Sandwich".equalsIgnoreCase(itemToPurchase))) 
-				throw new RuntimeException("Item not found. Please enter a valid item");
+			throw new RuntimeException(CodeConstants.pleaseEnterValidItemMessage);
+		if(!menuItemMap.containsKey(itemToPurchase))
+				throw new RuntimeException(CodeConstants.oneOrMoreItemInvalidMessage);
 		itemsPurchased.add(itemToPurchase);
 		totalCharge += getPrice(itemToPurchase);
 		return itemsPurchased;
@@ -74,18 +85,10 @@ public class BillingApp {
 	public double getPrice(String itemToPurchase) {
 		if(StringUtils.isBlank(itemToPurchase)) 
 			return 0;
-		switch(itemToPurchase) {
-			case "Cola":
-				return 0.50;
-			case "Coffee":
-				return 1.00;
-			case "Cheese Sandwich":
-				return 2.00;
-			case "Steak Sandwich":
-				return 4.50;
-			default:
-				return 0;
-			}
+		if(menuItemMap.containsKey(itemToPurchase))
+			return menuItemMap.get(itemToPurchase);
+		else 
+			return 0;
 	}
 	
 	public double getTotalCharge() {
@@ -95,10 +98,10 @@ public class BillingApp {
 	public double calculateServiceCharge() {
 		boolean foodItem = false;
 		for(String item : itemsPurchased) {
-			if(item.equalsIgnoreCase("Cheese Sandwich")) {
+			if(item.equalsIgnoreCase(CodeConstants.menuItemCheeseSandwich)) {
 				foodItem = true;
 			}
-			if (item.equalsIgnoreCase("Steak Sandwich")) {
+			if (item.equalsIgnoreCase(CodeConstants.menuItemSteakSandwich)) {
 				return (totalCharge * 20.00 / 100.0 > 20.00) ? 20.00 : totalCharge * 20.00 / 100.0;
 			}
 		}
