@@ -2,6 +2,8 @@ package com.myprojects.billingapp;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Predicate;
+
 import org.apache.commons.lang.StringUtils;
 
 import com.myprojects.billingapp.CodeConstants;
@@ -106,17 +108,13 @@ public class BillingApp {
 	 */
 	public double calculateServiceCharge() {
 		boolean foodItem = false;
-		for(MenuItem item : itemsPurchased.values()) {
-			if(item.getType().equalsIgnoreCase(CodeConstants.coldFood)) {
-				foodItem = true;
-			}
-			if (item.getType().equalsIgnoreCase(CodeConstants.hotFood)) {
-				return (totalCharge * 20.00 / 100.0 > 20.00) ? 20.00 : totalCharge * 20.00 / 100.0;
-			}
-		}
+		Predicate<MenuItem> coldFoodPredicate = e -> e.getType().equalsIgnoreCase(CodeConstants.coldFood);
+		Predicate<MenuItem> hotFoodPredicate = e -> e.getType().equalsIgnoreCase(CodeConstants.hotFood);
+		foodItem = itemsPurchased.values().stream().anyMatch(coldFoodPredicate);
+		if(itemsPurchased.values().stream().anyMatch(hotFoodPredicate))
+			return (totalCharge * 20.00 / 100.0 > 20.00) ? 20.00 : totalCharge * 20.00 / 100.0;
 		if(foodItem)
 			return totalCharge * 10.0 / 100.0;
-		else
-			return 0;
+		return 0;
 	}
 }
