@@ -1,44 +1,42 @@
 package com.myprojects.billingapp;
 
-import java.awt.ItemSelectable;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import javax.management.RuntimeErrorException;
-
 import org.apache.commons.lang.StringUtils;
+
+import com.myprojects.billingapp.CodeConstants;
+import com.myprojects.billingapp.MenuItem;
 
 
 /**
  * 
  * @author Kashyap
+ * 
  * Billing Application written to generate a bill including a service charge for Café X 
  * so the customer does not have to work out how much to tip.
  * 
- * Step 01 - Create a list of items purchased by a customer
  */
 
 public class BillingApp {
 
 	//Holds the list of items purchased
-	private List<String> itemsPurchased = new ArrayList<String>();
-	//Holds a map of items, their price & type
-	private Map<String, Double> menuItemMap = new HashMap<String, Double>();
+	private Map<String, MenuItem> itemsPurchased = new HashMap<String, MenuItem>();
+	//Holds a map of items, their price & type that are in Cafe X's menu list
+	private static Map<String, MenuItem> menuItemMap = new HashMap<String, MenuItem>();
 	private double totalCharge = 0;
 	
-	public BillingApp() {
-		menuItemMap.put(CodeConstants.menuItemCola, 0.50);
-		menuItemMap.put(CodeConstants.menuItemCoffee, 1.00);
-		menuItemMap.put(CodeConstants.menuItemCheeseSandwich, 2.00);
-		menuItemMap.put(CodeConstants.menuItemSteakSandwich, 4.50);
+	//Initialise the menuItemMap to hold the list of items which are in Cafe X's menu list
+	//In real life scenario this will be done either by spring injection or read from db on app startup
+	static {
+		menuItemMap.put(CodeConstants.menuItemCola, new MenuItem(CodeConstants.menuItemCola, 0.50, CodeConstants.coldDrink));
+		menuItemMap.put(CodeConstants.menuItemCoffee, new MenuItem(CodeConstants.menuItemCoffee, 1.00, CodeConstants.hotDrink));
+		menuItemMap.put(CodeConstants.menuItemCheeseSandwich, new MenuItem(CodeConstants.menuItemCheeseSandwich, 2.00, CodeConstants.coldFood));
+		menuItemMap.put(CodeConstants.menuItemSteakSandwich, new MenuItem(CodeConstants.menuItemSteakSandwich, 4.50, CodeConstants.hotFood));
 	}
-
+	
 	public static void main(String[] args) {
 		BillingApp bApp = new BillingApp();
-		
+		int idx = 0;
 		try {
 			for(String item : args) {
 				bApp.purchaseItem(item);
@@ -48,8 +46,8 @@ public class BillingApp {
 			System.out.println("===============");
 			System.out.printf("%5s %-18s %s\n", "Item", "", "Price");
 			System.out.println();
-			for(int idx = 0; idx < bApp.itemsPurchased.size(); idx++) {
-				System.out.printf("%2d. %-20s £%.2f\n", idx+1, bApp.itemsPurchased.get(idx), bApp.getPrice(bApp.itemsPurchased.get(idx)) );
+			for(MenuItem menuItem : bApp.itemsPurchased.values()) {
+				System.out.printf("%2d. %-20s £%.2f\n", ++idx, menuItem.getName(), menuItem.getPrice());
 			}
 			System.out.println("--------------------");
 			System.out.printf("%5s %-13s £%.2f\n", "Sub Total ", "", bApp.totalCharge);
@@ -68,25 +66,31 @@ public class BillingApp {
 	/**
 	 * 
 	 * @param itemToPurchase
-	 * @return list of items in the purchase list
+	 * @return Map of items in the purchase list
 	 * @exception RuntimeException
 	 * 
 	 */
-	public List<String> purchaseItem(String itemToPurchase) {
+	public Map<String, MenuItem> purchaseItem(String itemToPurchase) {
 		if(StringUtils.isBlank(itemToPurchase)) 
 			throw new RuntimeException(CodeConstants.pleaseEnterValidItemMessage);
 		if(!menuItemMap.containsKey(itemToPurchase))
 				throw new RuntimeException(CodeConstants.oneOrMoreItemInvalidMessage);
-		itemsPurchased.add(itemToPurchase);
+		MenuItem menuItem = menuItemMap.get(itemToPurchase);
+		itemsPurchased.put(menuItem.getName(), new MenuItem(menuItem.getName(), menuItem.getPrice(), menuItem.getType()));
 		totalCharge += getPrice(itemToPurchase);
 		return itemsPurchased;
 	}
 
+	/**
+	 * 
+	 * @param getPrice
+	 * @return price of the item to purchase
+	 */
 	public double getPrice(String itemToPurchase) {
 		if(StringUtils.isBlank(itemToPurchase)) 
 			return 0;
 		if(menuItemMap.containsKey(itemToPurchase))
-			return menuItemMap.get(itemToPurchase);
+			return menuItemMap.get(itemToPurchase).getPrice();
 		else 
 			return 0;
 	}
@@ -95,13 +99,18 @@ public class BillingApp {
 		return totalCharge;
 	}
 
+	/**
+	 * 
+	 * @return the service charge based on the items in purchase list i.e. cold food items only will incur 10% service charge
+	 * whereas a hot food item in the list will incur 20% or £20 service charge which ever is minimum
+	 */
 	public double calculateServiceCharge() {
 		boolean foodItem = false;
-		for(String item : itemsPurchased) {
-			if(item.equalsIgnoreCase(CodeConstants.menuItemCheeseSandwich)) {
+		for(MenuItem item : itemsPurchased.values()) {
+			if(item.getType().equalsIgnoreCase(CodeConstants.coldFood)) {
 				foodItem = true;
 			}
-			if (item.equalsIgnoreCase(CodeConstants.menuItemSteakSandwich)) {
+			if (item.getType().equalsIgnoreCase(CodeConstants.hotFood)) {
 				return (totalCharge * 20.00 / 100.0 > 20.00) ? 20.00 : totalCharge * 20.00 / 100.0;
 			}
 		}

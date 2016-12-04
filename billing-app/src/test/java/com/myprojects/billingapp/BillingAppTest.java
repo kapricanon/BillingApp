@@ -6,20 +6,20 @@ package com.myprojects.billingapp;
 import static org.junit.Assert.*;
 
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.myprojects.billingapp.BillingApp;
+
 /**
- * @author User
+ * @author Kashyap
  *
  */
 public class BillingAppTest {
 
-	/**
-	 * @throws java.lang.Exception
-	 */
 	private static final double DELTA = 1e-15;
 
 	
@@ -30,30 +30,30 @@ public class BillingAppTest {
 	@Test
 	public void purchaseOneValidItem() {
 		BillingApp bApp = new BillingApp();
-		List<String> purchasedItems = bApp.purchaseItem(CodeConstants.menuItemCola);
-		assertTrue(purchasedItems.get(0).equals(CodeConstants.menuItemCola));
+		Map<String, MenuItem> purchasedItems = bApp.purchaseItem(CodeConstants.menuItemCola);
+		assertTrue(purchasedItems.get(CodeConstants.menuItemCola).getName().equals(CodeConstants.menuItemCola));
 	}
 	
 	@Test
 	public void purchaseTwoValidItems() {
 		BillingApp bApp = new BillingApp();
-		List<String> purchasedItems = bApp.purchaseItem(CodeConstants.menuItemCola);
+		Map<String, MenuItem> purchasedItems = bApp.purchaseItem(CodeConstants.menuItemCola);
 		bApp.purchaseItem(CodeConstants.menuItemCoffee);
-		assertTrue(purchasedItems.get(0).equals(CodeConstants.menuItemCola));
-		assertTrue(purchasedItems.get(1).equals(CodeConstants.menuItemCoffee));
+		assertTrue(purchasedItems.get(CodeConstants.menuItemCola).getName().equals(CodeConstants.menuItemCola));
+		assertTrue(purchasedItems.get(CodeConstants.menuItemCoffee).getName().equals(CodeConstants.menuItemCoffee));
 	}
 	
 	@Test
 	public void purchaseMultipleValidItems() {
 		BillingApp bApp = new BillingApp();
-		List<String> purchasedItems = bApp.purchaseItem(CodeConstants.menuItemCola);
+		Map<String, MenuItem> purchasedItems = bApp.purchaseItem(CodeConstants.menuItemCola);
 		bApp.purchaseItem(CodeConstants.menuItemCoffee);
 		bApp.purchaseItem(CodeConstants.menuItemCheeseSandwich);
 		bApp.purchaseItem(CodeConstants.menuItemSteakSandwich);
-		assertTrue(purchasedItems.get(0).equals(CodeConstants.menuItemCola));
-		assertTrue(purchasedItems.get(1).equals(CodeConstants.menuItemCoffee));
-		assertTrue(purchasedItems.get(2).equals(CodeConstants.menuItemCheeseSandwich));
-		assertTrue(purchasedItems.get(3).equals(CodeConstants.menuItemSteakSandwich));
+		assertTrue(purchasedItems.get(CodeConstants.menuItemCola).getName().equals(CodeConstants.menuItemCola));
+		assertTrue(purchasedItems.get(CodeConstants.menuItemCoffee).getName().equals(CodeConstants.menuItemCoffee));
+		assertTrue(purchasedItems.get(CodeConstants.menuItemCheeseSandwich).getName().equals(CodeConstants.menuItemCheeseSandwich));
+		assertTrue(purchasedItems.get(CodeConstants.menuItemSteakSandwich).getName().equals(CodeConstants.menuItemSteakSandwich));
 	}
 	
 	@Test
