@@ -24,22 +24,3 @@ Steps to run the application (COMMAND PROMPT)
 4. Run the command "mvn package"
 5. Now run the command "java -cp .;target\BillingApp.jar;target\dependency-jars\commons-lang-2.6.jar com.myprojects.billingapp.BillingApp Cola Coffee"
 6. You can change the menu items as needed in the above command
-
-
-Sample output
--------------
-
-===============
-Items Purchased
-===============
- Item                    Price
-
- 1. Cola                 £0.50
- 2. Coffee               £1.00
---------------------
-Sub Total                £1.50
---------------------
-Service Charge            £0.00
---------------------
-Total Charge              £1.50
---------------------
